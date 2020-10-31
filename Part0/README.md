@@ -4,7 +4,89 @@
 
 ### Exercise 0.4 Answer:
 
+- New Note Chain of Events Diagram
+
 <p align="center">
-  <img src="" alt="Exercise 0.4 - New note web sequence diagram">
+  <img src="https://raw.githubusercontent.com/auxfuse/fullstackopen2020/main/Part0/assets/Exercise0.4_new_note_creation_chain_of_events_diagram.png" alt="Exercise 0.4 - New note web sequence diagram">
 </p>
 
+<details>
+<summary>Click to expand Web sequence diagram Modeling Code for above</summary>
+
+```markdown
+title Exercise 0.4 new note - new note creation chain of events diagram
+
+actor User
+participant browser
+
+User -> browser: Navigate to exampleapp/notes
+
+browser -> server: HTTP request GET from\n https://studies.cs.helsinki.fi/exampleapp/notes
+activate server 
+note over server:
+Status 200
+request succeeded
+end note
+server --> browser: HTML fetched & rendered
+deactivate server
+
+browser -> server: HTTP request GET from\n https://studies.cs.helsinki.fi/exampleapp/main.css
+activate server 
+note over server:
+Status 200
+request succeeded
+end note
+server --> browser: CSS fetched & painted to browser
+deactivate server
+
+browser -> server: HTTP request GET from\n https://studies.cs.helsinki.fs/exampleapp/main.js
+activate server
+note over server:
+Status 200
+request succeeded
+end note
+server --> browser: JS fetched & executed requesting JSON data
+deactivate server 
+
+browser -> server: HTTP request GET from\n https://studies.cs.helisnki.fs/exampleapp/data.json
+activate server
+note over server:
+Status 200
+request succeeded
+end note
+server --> browser: notes returned as JSON data only retrieving "content" header from note object
+deactivate server 
+
+note over browser:
+Event handler executed
+rendering notes to DOM
+end note
+
+User -> browser: New note entered & submitted
+
+browser -> server: HTTP request POST to https://studies.cs.helsinki.fi/exampleapp/new_note
+note over server:
+Server accepts data from POST request in JSON format
+under two headers: "content" & "date" respectively.
+end note
+note over server:
+"content" and "date" are captured as a new 'note' object
+and adds it to an array holding all 'notes' (for which
+the array is called)
+end note
+note over server:
+Status 302
+redirect implemented
+after POST
+end note
+activate server
+server --> browser: URL redirect to re-render the page with the new data
+deactivate server
+
+note over browser, server:
+At this stage the redirect causes the exampleapp/notes page
+to reload, repeating the process above.
+end note
+```
+
+</details>
